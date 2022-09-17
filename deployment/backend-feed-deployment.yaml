@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-feed
+spec:
+  selector:
+    matchLabels:
+      run: backend-feed
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: backend-feed
+    spec:
+      containers:
+      - image: docker.io/etsh2o/udagram-api-feed:v2
+        name: backend-feed
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "2048Mi"
+            cpu: "500m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: backend-feed
+  name: backend-feed
+spec:
+  ports:
+  - name: "8080"
+    port: 8080
+    targetPort: 8080
+  selector:
+    service: backend-feed
